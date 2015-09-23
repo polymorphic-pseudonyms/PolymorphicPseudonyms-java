@@ -12,13 +12,18 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * Created by Hans on 17-9-2015.
+ * This class performs the tasks from the Key Management Authority.
+ * It creates a system-wide public key pair, KDF key D_k and public key pairs for all parties in the system.
  */
 public class KMA {
     private BigInteger x_k;
     private ECPoint y_k;
     private byte[] Dk;
 
+    /**
+     * Construct a KMA. This will generate the system-wide public key pair and KDF key D_k
+     * @param pf The {@link PF Pseudonym Facility}, to which D_k should be passed.
+     */
     public KMA(PF pf) {
         ECKeyPairGenerator generator = new ECKeyPairGenerator();
         try {
@@ -39,13 +44,23 @@ public class KMA {
         }
     }
 
+    /**
+     * Lets the {@linkplain Party parties} in the system get their public key pair.
+     * @param id The id of the party that requests the key pair
+     * @return a {@link PPKeyPair}, containing the private and public key for the requesting party.
+     */
     public PPKeyPair requestKeyPair(String id) {
         BigInteger m = Util.KDF(Dk, id.getBytes());
+        assert m != null;
         BigInteger x = x_k.multiply(m.modInverse(SystemParams.getOrder())).mod(SystemParams.getOrder());
 
         return new PPKeyPair(x);
     }
 
+    /**
+     *
+     * @return the system wide public key
+     */
     public ECPoint getY_k() {
         return y_k;
     }

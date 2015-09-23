@@ -9,7 +9,7 @@ import org.bouncycastle.math.ec.ECPoint;
 import java.math.BigInteger;
 
 /**
- * Created by Hans on 21-9-2015.
+ * The parameters of the curve used in the system.
  */
 public class SystemParams {
     private static ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("brainpoolp320r1");

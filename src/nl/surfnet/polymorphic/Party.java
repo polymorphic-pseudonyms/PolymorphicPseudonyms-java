@@ -8,19 +8,31 @@ import org.bouncycastle.math.ec.ECPoint;
 import java.math.BigInteger;
 
 /**
- * Created by Hans on 21-9-2015.
+ *  A party in the federation. Parties can receive encrypted pseudonyms.
  */
 public class Party {
     private String id;
     private PPKeyPair keyPair;
     private BigInteger cn;
 
+    /**
+     * Constructs a Party.
+     *
+     * @param id The id for this Party
+     * @param kma The {@link KMA} of the federation this Party is a part of
+     */
     public Party(String id, KMA kma) {
         this.id = id;
         this.keyPair = kma.requestKeyPair(id);
         this.cn = Util.random();
     }
 
+    /**
+     * Decrypt an Encrypted Pseudonym.
+     *
+     * @param ep The Encrypted {@link Pseudonym}
+     * @return The pseudonym from the Encrypted Pseudonym
+     */
     public byte[] decryptPseudonym(Pseudonym ep) {
         ECElGamalDecryptor decryptor = new ECElGamalDecryptor();
         decryptor.init(new ECPrivateKeyParameters(keyPair.getPrivateKey(), SystemParams.getDomainParameters()));
@@ -29,6 +41,10 @@ public class Party {
         return Util.Hash(j.getEncoded(false));
     }
 
+    /**
+     *
+     * @return The public key of this Party
+     */
     public ECPoint getPublicKey() {
         return keyPair.getPublicKey();
     }

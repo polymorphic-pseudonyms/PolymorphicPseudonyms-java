@@ -13,7 +13,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
- * Created by Hans on 17-9-2015.
+ * Static class that provides different helper functions.
  */
 public class Util {
     private static SecureRandom prng;
@@ -26,6 +26,14 @@ public class Util {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Key derivation function.
+     *
+     * @param k The key for the KDF
+     * @param data The data for the KDF
+     * @return The derived key
+     */
     public static BigInteger KDF(byte[] k, byte[] data) {
         try {
             Mac hMac = Mac.getInstance("HmacSHA256");
@@ -34,16 +42,19 @@ public class Util {
             byte[] bytes = hMac.doFinal(data);
             return new BigInteger(1, bytes);
         }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        catch (InvalidKeyException e) {
+        catch (NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
         }
 
         return null;
     }
 
+    /**
+     * Hashes the given data.
+     *
+     * @param data The data to hash
+     * @return byte-array containing the hashed data
+     */
     public static byte[] Hash(byte[] data) {
         SHA256Digest sha256 = new SHA256Digest();
         sha256.update(data, 0, data.length);
@@ -52,6 +63,12 @@ public class Util {
         return out;
     }
 
+    /**
+     * Embeds data into the elliptic curve.
+     *
+     * @param bytes The data to embed
+     * @return The {@link ECPoint} representing the data
+     */
     public static ECPoint embed(byte[] bytes) {
         byte counter = 0;
         ECFieldElement x = null,  y = null;
@@ -70,12 +87,22 @@ public class Util {
         return SystemParams.getCurve().createPoint(x.toBigInteger(), y.toBigInteger());
     }
 
+    /**
+     * Generate secure random bytes.
+     *
+     * @param num The number of random bytes to generate
+     * @return byte array of length num containing secure random bytes
+     */
     public static byte[] randomBytes(int num) {
         byte[] bytes = new byte[num];
         prng.nextBytes(bytes);
         return bytes;
     }
 
+    /**
+     * Generate a secure random {@link BigInteger}
+     * @return A secure random {@link BigInteger}
+     */
     public static BigInteger random() {
         return new BigInteger(randomBytes(40));
     }
