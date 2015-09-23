@@ -22,9 +22,8 @@ public class KMA {
 
     /**
      * Construct a KMA. This will generate the system-wide public key pair and KDF key D_k
-     * @param pf The {@link PF Pseudonym Facility}, to which D_k should be passed.
      */
-    public KMA(PF pf) {
+    public KMA() {
         ECKeyPairGenerator generator = new ECKeyPairGenerator();
         try {
             SecureRandom prng = SecureRandom.getInstance("SHA1PRNG");
@@ -37,7 +36,6 @@ public class KMA {
             this.y_k = ((ECPublicKeyParameters) keypair.getPublic()).getQ();
 
             Dk = Util.randomBytes(32);
-            pf.setDk(Dk);
         }
         catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -63,5 +61,13 @@ public class KMA {
      */
     public ECPoint getY_k() {
         return y_k;
+    }
+
+    /**
+     *
+     * @return the KDF key D_k
+     */
+    public byte[] getDk() {
+        return Dk;
     }
 }

@@ -11,8 +11,9 @@ public class PF {
     /**
      * Constructs a new Pseudonym Facility.
      */
-    public PF() {
-        Dp = Util.randomBytes(32);
+    public PF(byte[] Dk) {
+        this.Dk = Dk;
+        this.Dp = Util.randomBytes(32);
     }
 
     /**
@@ -26,14 +27,5 @@ public class PF {
         return pp.power(Util.KDF(Dp, sp.getBytes()))
                 .keyPower(Util.KDF(Dk, sp.getBytes()))
                 .randomize();
-    }
-
-    /**
-     * Allows the {@link KMA} to set the KDF key D_k of the pseudonym facility.
-     *
-     * @param Dk The Dk to set
-     */
-    void setDk(byte[] Dk) {
-        this.Dk = Dk;
     }
 }

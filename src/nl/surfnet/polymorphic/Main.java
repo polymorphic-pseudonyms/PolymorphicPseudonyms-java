@@ -5,9 +5,8 @@ import org.bouncycastle.util.encoders.Hex;
 public class Main {
 
     public static void main(String[] args) {
-
-        PF pf = new PF();
-        KMA kma = new KMA(pf);
+        KMA kma = new KMA();
+        PF pf = new PF(kma.getDk());
         System.out.printf("y_k: %s\n", Hex.toHexString(kma.getY_k().getEncoded(false)));
         IdP idp = new IdP("ru.nl", kma);
         Party sp = new Party("google.nl", kma);
@@ -23,7 +22,5 @@ public class Main {
                 System.out.printf("EP:\n%s\n\nPseudonym:\n%s\n=============\n\n", ep, Hex.toHexString(p));
             }
         }
-
-
     }
 }
