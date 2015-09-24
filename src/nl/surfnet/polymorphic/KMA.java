@@ -7,6 +7,10 @@ import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.math.ec.ECPoint;
 
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -15,7 +19,7 @@ import java.security.SecureRandom;
  * This class performs the tasks from the Key Management Authority.
  * It creates a system-wide public key pair, KDF key D_k and public key pairs for all parties in the system.
  */
-public class KMA {
+public class KMA implements Serializable {
     private BigInteger x_k;
     private ECPoint y_k;
     private byte[] Dk;
@@ -69,5 +73,30 @@ public class KMA {
      */
     public byte[] getDk() {
         return Dk;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
+        out.writeObject(x_k);
+        byte[] encoded = y_k.getEncoded(false);
+        out.writeInt(encoded.length);
+        out.write(encoded);
+        out.writeInt(Dk.length);
+        out.write(Dk);
+
+    }
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        x_k = (BigInteger)in.readObject();
+        byte[] encoded = new byte[in.readInt()];
+        in.read(encoded);
+        y_k = SystemParams.getCurve().decodePoint(encoded);
+        Dk = new byte[in.readInt()];
+        in.read(Dk);
+
+    }
+    private void readObjectNoData()
+            throws ObjectStreamException {
+        throw new InvalidObjectException("Stream data needed");
     }
 }

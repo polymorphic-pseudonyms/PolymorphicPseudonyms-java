@@ -5,12 +5,13 @@ import org.bouncycastle.crypto.ec.ECPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.math.ec.ECPoint;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
  *  A party in the federation. Parties can receive encrypted pseudonyms.
  */
-public class Party {
+public class Party implements Serializable {
     private String id;
     private PPKeyPair keyPair;
     private BigInteger cn;

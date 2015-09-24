@@ -1,10 +1,12 @@
 package nl.surfnet.polymorphic;
 
 
+import java.io.Serializable;
+
 /**
  * The Pseudonym Facility creates KDF key D_p and generates encrypted pseudonyms from polymorphic pseudonyms.
  */
-public class PF {
+public class PF implements Serializable{
     private byte[] Dp;
     private byte[] Dk;
 

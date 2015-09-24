@@ -3,6 +3,7 @@ package nl.surfnet.polymorphic;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.util.encoders.Hex;
 
+import java.io.*;
 import java.math.BigInteger;
 
 /**
@@ -16,7 +17,7 @@ import java.math.BigInteger;
  * @see PF#requestEncryptedPseudonym(Pseudonym pp, String sp)
  * @see Party#decryptPseudonym(Pseudonym ep)
  */
-public class Pseudonym {
+public class Pseudonym implements Serializable {
     private ECPoint A, B, C;
 
     /**
@@ -108,5 +109,36 @@ public class Pseudonym {
                 ")", Hex.toHexString(A.getEncoded(false)),
                 Hex.toHexString(B.getEncoded(false)),
                 Hex.toHexString(C.getEncoded(false)));
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
+        writeECPoint(out, A);
+        writeECPoint(out, B);
+        writeECPoint(out, C);
+    }
+
+    private void writeECPoint(ObjectOutputStream out, ECPoint point) throws IOException {
+        byte[] encoded = point.getEncoded(false);
+        out.writeInt(encoded.length);
+        out.write(encoded);
+    }
+
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        A = readECPoint(in);
+        B = readECPoint(in);
+        C = readECPoint(in);
+    }
+
+    private ECPoint readECPoint(ObjectInputStream in) throws IOException {
+        byte[] encoded = new byte[in.readInt()];
+        in.read(encoded);
+        return SystemParams.getCurve().decodePoint(encoded);
+    }
+
+    private void readObjectNoData()
+            throws ObjectStreamException {
+        throw new InvalidObjectException("Stream data needed");
     }
 }
