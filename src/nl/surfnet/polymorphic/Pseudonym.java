@@ -5,6 +5,7 @@ import org.bouncycastle.util.encoders.Hex;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.util.Base64;
 
 /**
  * A triple of {@link ECPoint}s representing either a Polymorphic Pseudonym or an Encrypted Pseudonym.
@@ -109,6 +110,25 @@ public class Pseudonym implements Serializable {
                 ")", Hex.toHexString(A.getEncoded(false)),
                 Hex.toHexString(B.getEncoded(false)),
                 Hex.toHexString(C.getEncoded(false)));
+    }
+
+    public String encode() {
+        return String.format("%s,%s,%s",
+                Base64.getEncoder().encodeToString(A.getEncoded(true)),
+                Base64.getEncoder().encodeToString(B.getEncoded(true)),
+                Base64.getEncoder().encodeToString(C.getEncoded(true)));
+    }
+
+    public static Pseudonym decode(String encoded) {
+        String[] parts = encoded.split(",");
+        if(parts.length != 3) {
+            throw new IllegalArgumentException("Encoded string must have 3 parts");
+        }
+        return new Pseudonym(
+                SystemParams.getCurve().decodePoint(Base64.getDecoder().decode(parts[0])),
+                SystemParams.getCurve().decodePoint(Base64.getDecoder().decode(parts[1])),
+                SystemParams.getCurve().decodePoint(Base64.getDecoder().decode(parts[2]))
+        );
     }
 
     private void writeObject(java.io.ObjectOutputStream out)
