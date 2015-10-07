@@ -1,6 +1,10 @@
 package nl.surfnet.polymorphic;
 
+import org.bouncycastle.util.encoders.Hex;
+
 import java.io.*;
+import java.math.BigInteger;
+import java.util.Base64;
 import java.util.HashMap;
 
 /**
@@ -39,13 +43,20 @@ public class PPHelper {
             KMA kma = (KMA) ois.readObject();
             ois.close();
 
-            Party party = new Party(spid, kma.requestKeyPair(spid), Util.random());
+            PPKeyPair keyPair = kma.requestKeyPair(spid);
+            BigInteger closingKey = Util.random();
+            Party party = new Party(spid, keyPair, closingKey);
             sps.put(spid, party);
 
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("SPs"));
             oos.writeObject(sps);
             oos.close();
             System.out.printf("SP '%s' successfully registered\n", spid);
+
+            System.out.printf("public key:\n%s\nprivate key:\n%s\nclosing key:\n%s\n",
+                    Base64.getEncoder().encodeToString(keyPair.getPublicKey().getEncoded(true)),
+                    Base64.getEncoder().encodeToString(keyPair.getPrivateKey().toByteArray()),
+                    Base64.getEncoder().encodeToString(closingKey.toByteArray()));
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -134,7 +145,8 @@ public class PPHelper {
 
     public static void generateKeys() {
         KMA kma = new KMA();
-        PF pf = new PF(kma.getDk(), Util.randomBytes(32));
+        byte[] dp = Util.randomBytes(32);
+        PF pf = new PF(kma.getDk(), dp);
 
         try {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("kma"));
@@ -149,5 +161,7 @@ public class PPHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.printf("dp: %s\ndk: %s\ny_k: %s\n\n", Hex.toHexString(dp), Hex.toHexString(kma.getDk()), Hex.toHexString(kma.getY_k().getEncoded(true)));
     }
 }
