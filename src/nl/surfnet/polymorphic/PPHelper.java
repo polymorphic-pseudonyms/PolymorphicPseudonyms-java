@@ -39,7 +39,7 @@ public class PPHelper {
             KMA kma = (KMA) ois.readObject();
             ois.close();
 
-            Party party = new Party(spid, kma);
+            Party party = new Party(spid, kma.requestKeyPair(spid), Util.random());
             sps.put(spid, party);
 
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("SPs"));
@@ -90,7 +90,7 @@ public class PPHelper {
             KMA kma = (KMA) ois.readObject();
             ois.close();
 
-            IdP idp = new IdP("surfnet.nl", kma);
+            IdP idp = new IdP(kma.getY_k());
             Pseudonym pp = idp.generatePolymorphicPseudonym(uid);
             users.put(uid, pp);
 
@@ -134,7 +134,7 @@ public class PPHelper {
 
     public static void generateKeys() {
         KMA kma = new KMA();
-        PF pf = new PF(kma.getDk());
+        PF pf = new PF(kma.getDk(), Util.randomBytes(32));
 
         try {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("kma"));

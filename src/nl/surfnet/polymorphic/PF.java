@@ -13,9 +13,9 @@ public class PF implements Serializable{
     /**
      * Constructs a new Pseudonym Facility.
      */
-    public PF(byte[] Dk) {
+    public PF(byte[] Dk, byte[] Dp) {
         this.Dk = Dk;
-        this.Dp = Util.randomBytes(32);
+        this.Dp = Dp;
     }
 
     /**

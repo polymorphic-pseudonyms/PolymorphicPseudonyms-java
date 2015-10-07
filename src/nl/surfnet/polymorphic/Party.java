@@ -14,18 +14,19 @@ import java.math.BigInteger;
 public class Party implements Serializable {
     private String id;
     private PPKeyPair keyPair;
-    private BigInteger cn;
+    private BigInteger closingKey;
 
     /**
      * Constructs a Party.
      *
      * @param id The id for this Party
-     * @param kma The {@link KMA} of the federation this Party is a part of
+     * @param keyPair The {@link PPKeyPair} with the public and private key for this Party
+     * @param closingKey The closing key this Party uses to form the final pseudonym for its users
      */
-    public Party(String id, KMA kma) {
+    public Party(String id, PPKeyPair keyPair, BigInteger closingKey) {
         this.id = id;
-        this.keyPair = kma.requestKeyPair(id);
-        this.cn = Util.random();
+        this.keyPair = keyPair;
+        this.closingKey = closingKey;
     }
 
     /**
@@ -38,7 +39,7 @@ public class Party implements Serializable {
         ECElGamalDecryptor decryptor = new ECElGamalDecryptor();
         decryptor.init(new ECPrivateKeyParameters(keyPair.getPrivateKey(), SystemParams.getDomainParameters()));
         ECPoint j = decryptor.decrypt(new ECPair(ep.getA(), ep.getB()));
-        j = j.multiply(cn);
+        j = j.multiply(closingKey);
         return Util.Hash(j.getEncoded(false));
     }
 

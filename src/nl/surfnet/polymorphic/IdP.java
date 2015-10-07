@@ -3,22 +3,21 @@ package nl.surfnet.polymorphic;
 import org.bouncycastle.crypto.ec.ECElGamalEncryptor;
 import org.bouncycastle.crypto.ec.ECPair;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.math.ec.ECPoint;
 
 /**
  * An Identity Provider creates polymorphic pseudonyms for its users.
  */
-public class IdP extends Party {
-    private KMA kma;
+public class IdP {
+    private ECPoint y_k;
 
     /**
      * Construct an Identity Provider.
      *
-     * @param id The id for this {@link Party}
-     * @param kma The {@link KMA} of the federation this IdP is part of
+     * @param y_k The system-wide public key used in the federation
      */
-    public IdP(String id, KMA kma){
-        super(id, kma);
-        this.kma = kma;
+    public IdP(ECPoint y_k){
+        this.y_k = y_k;
     }
 
     /**
@@ -29,13 +28,13 @@ public class IdP extends Party {
      */
     public Pseudonym generatePolymorphicPseudonym(String uid){
         ECElGamalEncryptor encryptor = new ECElGamalEncryptor();
-        encryptor.init(new ECPublicKeyParameters(kma.getY_k(), SystemParams.getDomainParameters()));
+        encryptor.init(new ECPublicKeyParameters(y_k, SystemParams.getDomainParameters()));
         ECPair pair = encryptor.encrypt(Util.embed(uid.getBytes()));
 
         return new Pseudonym(
                 pair.getX(),
                 pair.getY(),
-                kma.getY_k()
+                y_k
         );
     }
 }
