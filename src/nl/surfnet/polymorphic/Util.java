@@ -104,6 +104,6 @@ public class Util {
      * @return A secure random {@link BigInteger}
      */
     public static BigInteger random() {
-        return new BigInteger(randomBytes(40));
+        return new BigInteger(1, randomBytes(40));
     }
 }
