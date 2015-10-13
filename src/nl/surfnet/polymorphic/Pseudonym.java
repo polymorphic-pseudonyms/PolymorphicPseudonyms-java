@@ -112,6 +112,10 @@ public class Pseudonym implements Serializable {
                 Hex.toHexString(C.getEncoded(false)));
     }
 
+    /**
+     * Encode the pseudonym
+     * @return The base64 encoding of the encoded points, concatenated with ',' as separator.
+     */
     public String encode() {
         return String.format("%s,%s,%s",
                 Base64.getEncoder().encodeToString(A.getEncoded(true)),
@@ -119,6 +123,11 @@ public class Pseudonym implements Serializable {
                 Base64.getEncoder().encodeToString(C.getEncoded(true)));
     }
 
+    /**
+     * Decodes a pseudonym, that is decoded as described for {@link #encode()}
+     * @param encoded The encoded pseudonym
+     * @return The pseudonym that is decoded from the passed String
+     */
     public static Pseudonym decode(String encoded) {
         String[] parts = encoded.split(",");
         if(parts.length != 3) {
