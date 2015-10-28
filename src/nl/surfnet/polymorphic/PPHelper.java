@@ -1,7 +1,6 @@
 package nl.surfnet.polymorphic;
 
 import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.util.encoders.Hex;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -54,9 +53,9 @@ public class PPHelper {
             System.out.printf("SP '%s' successfully registered\n", spid);
 
             System.out.printf("public key:\n%s\nprivate key:\n%s\nclosing key:\n%s\n",
-                    Base64.encode(keyPair.getPublicKey().getEncoded(true)),
-                    Base64.encode(keyPair.getPrivateKey().toByteArray()),
-                    Base64.encode(closingKey.toByteArray()));
+                    Base64.toBase64String(keyPair.getPublicKey().getEncoded(true)),
+                    Base64.toBase64String(keyPair.getPrivateKey().toByteArray()),
+                    Base64.toBase64String(closingKey.toByteArray()));
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -109,7 +108,7 @@ public class PPHelper {
             oos.writeObject(users);
             oos.close();
 
-            System.out.printf("User '%s' registered with Polymorphic Pseudonym\n%s", uid, pp);
+            System.out.printf("User '%s' registered with Polymorphic Pseudonym\n%s", uid, pp.encode());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -162,6 +161,6 @@ public class PPHelper {
             e.printStackTrace();
         }
 
-        System.out.printf("dp: %s\ndk: %s\ny_k: %s\n\n", Hex.toHexString(dp), Hex.toHexString(kma.getDk()), Hex.toHexString(kma.getY_k().getEncoded(true)));
+        System.out.printf("dp: %s\ndk: %s\ny_k: %s\n\n", Base64.toBase64String(dp), Base64.toBase64String(kma.getDk()), Base64.toBase64String(kma.getY_k().getEncoded(true)));
     }
 }

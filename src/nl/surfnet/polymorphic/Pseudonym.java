@@ -118,9 +118,9 @@ public class Pseudonym implements Serializable {
      */
     public String encode() {
         return String.format("%s,%s,%s",
-                Base64.encode(A.getEncoded(true)),
-                Base64.encode(B.getEncoded(true)),
-                Base64.encode(C.getEncoded(true)));
+                Base64.toBase64String(A.getEncoded(true)),
+                Base64.toBase64String(B.getEncoded(true)),
+                Base64.toBase64String(C.getEncoded(true)));
     }
 
     /**
