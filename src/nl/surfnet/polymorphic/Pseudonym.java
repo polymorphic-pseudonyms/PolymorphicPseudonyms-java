@@ -1,11 +1,11 @@
 package nl.surfnet.polymorphic;
 
 import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.util.Base64;
 
 /**
  * A triple of {@link ECPoint}s representing either a Polymorphic Pseudonym or an Encrypted Pseudonym.
@@ -118,9 +118,9 @@ public class Pseudonym implements Serializable {
      */
     public String encode() {
         return String.format("%s,%s,%s",
-                Base64.getEncoder().encodeToString(A.getEncoded(true)),
-                Base64.getEncoder().encodeToString(B.getEncoded(true)),
-                Base64.getEncoder().encodeToString(C.getEncoded(true)));
+                Base64.encode(A.getEncoded(true)),
+                Base64.encode(B.getEncoded(true)),
+                Base64.encode(C.getEncoded(true)));
     }
 
     /**
@@ -134,9 +134,9 @@ public class Pseudonym implements Serializable {
             throw new IllegalArgumentException("Encoded string must have 3 parts");
         }
         return new Pseudonym(
-                SystemParams.getCurve().decodePoint(Base64.getDecoder().decode(parts[0])),
-                SystemParams.getCurve().decodePoint(Base64.getDecoder().decode(parts[1])),
-                SystemParams.getCurve().decodePoint(Base64.getDecoder().decode(parts[2]))
+                SystemParams.getCurve().decodePoint(Base64.decode(parts[0])),
+                SystemParams.getCurve().decodePoint(Base64.decode(parts[1])),
+                SystemParams.getCurve().decodePoint(Base64.decode(parts[2]))
         );
     }
 

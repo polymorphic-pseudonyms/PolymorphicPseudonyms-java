@@ -1,10 +1,10 @@
 package nl.surfnet.polymorphic;
 
+import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.util.Base64;
 import java.util.HashMap;
 
 /**
@@ -54,9 +54,9 @@ public class PPHelper {
             System.out.printf("SP '%s' successfully registered\n", spid);
 
             System.out.printf("public key:\n%s\nprivate key:\n%s\nclosing key:\n%s\n",
-                    Base64.getEncoder().encodeToString(keyPair.getPublicKey().getEncoded(true)),
-                    Base64.getEncoder().encodeToString(keyPair.getPrivateKey().toByteArray()),
-                    Base64.getEncoder().encodeToString(closingKey.toByteArray()));
+                    Base64.encode(keyPair.getPublicKey().getEncoded(true)),
+                    Base64.encode(keyPair.getPrivateKey().toByteArray()),
+                    Base64.encode(closingKey.toByteArray()));
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
