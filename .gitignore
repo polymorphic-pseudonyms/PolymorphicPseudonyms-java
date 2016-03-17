@@ -4,5 +4,5 @@ lib
 kma
 pf
 SPs
-/src/Main.java
+/src/*.java
 users
