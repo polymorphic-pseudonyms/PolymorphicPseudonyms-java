@@ -33,7 +33,12 @@ public class PPHelper {
         }
 
         if(sps.containsKey(spid)) {
-            System.err.printf("SP '%s' already registered\n", spid);
+            Party sp = sps.get(spid);
+            System.out.printf("SP '%s' already registered\n", spid);
+            System.out.printf("public key:\n%s\nprivate key:\n%s\nclosing key:\n%s\n",
+                    Base64.toBase64String(sp.getPublicKey().getEncoded(true)),
+                    Base64.toBase64String(sp.getPrivateKey().toByteArray()),
+                    Base64.toBase64String(sp.getClosingKey().toByteArray()));
             return;
         }
 
