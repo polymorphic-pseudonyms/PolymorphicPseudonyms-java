@@ -50,4 +50,8 @@ public class Party implements Serializable {
     public ECPoint getPublicKey() {
         return keyPair.getPublicKey();
     }
+
+    public BigInteger getPrivateKey() { return keyPair.getPrivateKey(); }
+
+    public BigInteger getClosingKey() { return keyPair.getPrivateKey(); }
 }
