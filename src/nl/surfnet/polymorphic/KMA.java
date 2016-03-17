@@ -47,6 +47,16 @@ public class KMA implements Serializable {
     }
 
     /**
+     * Construct a KMA, with the given keys
+     * @param x_k The private key of the system-wide public key pair
+     * @param Dk The KDF key D_k
+     */
+    public KMA(BigInteger x_k, byte[] Dk) {
+        this.x_k = x_k;
+        this.Dk = Dk;
+    }
+
+    /**
      * Lets the {@linkplain Party parties} in the system get their public key pair.
      * @param id The id of the party that requests the key pair
      * @return a {@link PPKeyPair}, containing the private and public key for the requesting party.
